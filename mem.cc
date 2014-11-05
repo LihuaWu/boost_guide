@@ -2,6 +2,9 @@
 #include <boost/make_shared.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/pool/pool.hpp>
+#include <boost/pool/object_pool.hpp>
+#include <boost/pool/singleton_pool.hpp>
+#include <boost/pool/pool_alloc.hpp>
 
 #include <algorithm>
 
@@ -18,7 +21,7 @@ struct File {
 	}
 };
 
-class Shared{
+class Shared {
 private:
 	shared_ptr<int> p;
 public:
@@ -72,6 +75,12 @@ void close_socket(socket_t *s) {
 	cout << "closing socket" << endl;
 	delete s;
 }
+
+struct demo_class {
+public:
+	int a, b, c;
+	demo_class(int x = 1, int y = 2, int z = 3) : a(x), b(y), c(z) {}
+};
 
 int main() {
 	//scoped ptr usage
@@ -183,5 +192,41 @@ int main() {
 	//assert(sp.use_count() == 2);
 	//p->x = 1000;
 	//p->print();
+
+	//pool<> p1(sizeof(int));
+
+	//int *p = (int*)p1.malloc();
+
+	//cout<<p1.get_requested_size()<<endl;
+	//assert(p1.is_from(p));
+
+	//p1.free(p);
+
+	//for (int i = 0; i < 100; ++i) {
+	//	p1.ordered_malloc(10);
+	//}
+
+	//object_pool<demo_class> pl;
+
+	//demo_class *p = pl.malloc();
+	//assert(pl.is_from(p));
+
+	//cout << p->a << "\t" << p->b << "\t" << p->c <<endl;
+
+	//assert(p->a != 1 || p->b != 2 || p->c != 3);
+
+	//p = pl.construct(7, 8, 9);
+
+	//object_pool<string> pls;
+
+	//for(int i = 0; i < 10; ++i) {
+	//	string *ps = pls.construct("hello object_pool");
+	//	cout<<*ps<<endl;
+	//}
+
+	vector<int, pool_allocator<int> > v;
+	v.push_back(10);
+	v.push_back(20);
+	cout<<v.size()<<endl;
 	return 0;
 }
